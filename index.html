@@ -58,6 +58,7 @@ table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.93rem}th,td
 </main><footer>DiGi Reading · QAR × REAL2Act · Grade XI English</footer>
 <iframe name="submitFrame" id="submitFrame" style="display:none"></iframe>
 <script>
+const DEFAULT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwWcqYHMMRRjvErATYLi_DgKtK_k5dBUx7aYeMWuMl9OYj7il4JYRKvihrbmBjwd1Ziw/exec';
 const tabs=[...document.querySelectorAll('nav button')];function switchTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));tabs.forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo({top:0,behavior:'smooth'})}tabs.forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
 const questions=[
 {type:'RIGHT THERE',q:'What should students do before playing games?',opts:['Complete school assignments and responsibilities','Play late at night','Stop exercising'],answer:0,why:'The text directly says students should complete assignments and responsibilities before playing.'},
@@ -74,5 +75,9 @@ function openDashboard(){let u=document.getElementById('scriptUrl').value.trim()
 function submitResults(){let f=document.getElementById('submitfeedback');f.style.display='block';let name=document.getElementById('studentName').value.trim(),cls=document.getElementById('studentClass').value.trim();if(!name||!cls){f.textContent='Please enter your full name and class in the READ section.';switchTab('read');return}if(quizScore===null){f.textContent='Please complete the QAR quiz and click “Check answers” before submitting.';switchTab('qar');return}let url=localStorage.getItem('digiReadingScriptUrl')||document.getElementById('scriptUrl').value.trim();if(!url){f.textContent='Teacher connection is not set up yet. Your answers are not sent online. Ask your teacher to configure the Apps Script URL.';return}
 const data={studentName:name,studentClass:cls,qarCorrect:quizScore,qarTotal:4,qarPercent:Math.round(quizScore/4*100),decision:document.getElementById('decision').value,reason:document.getElementById('reason').value.trim(),rule:document.getElementById('rule').value.trim(),learning:document.getElementById('learning').value.trim(),action:document.getElementById('change').value.trim(),confidence:document.getElementById('confidence').value};
 const form=document.createElement('form');form.method='POST';form.action=url;form.target='submitFrame';form.style.display='none';Object.entries(data).forEach(([k,v])=>{let i=document.createElement('input');i.name=k;i.value=v;form.appendChild(i)});document.body.appendChild(form);form.submit();setTimeout(()=>{if(form.parentNode){form.parentNode.removeChild(form)}},5000);f.textContent='Submission request sent. Check the Google Sheet after a few seconds. If no row appears, verify the /exec URL, deployment version, and access permissions.'}
-window.addEventListener('DOMContentLoaded',()=>{let u=localStorage.getItem('digiReadingScriptUrl');if(u)document.getElementById('scriptUrl').value=u});
+window.addEventListener('DOMContentLoaded', () => {
+  const savedUrl = localStorage.getItem('digiReadingScriptUrl');
+  const input = document.getElementById('scriptUrl');
+  input.value = savedUrl || DEFAULT_SCRIPT_URL;
+});
 </script></body></html>
